@@ -1570,7 +1570,7 @@ run(void)
 
 void
 runAutostart(void) {
-	system("~/.config/dwm/autostart.sh &");
+	system("~/.config/dwm/autostart.sh");
 }
 
 void

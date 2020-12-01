@@ -1,3 +1,4 @@
 *.o
 dwmc
 dwm
+config.h

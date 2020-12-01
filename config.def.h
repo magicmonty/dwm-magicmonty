@@ -2,7 +2,7 @@
 /* |  _ \_   _|  Derek Taylor (DistroTube) */
 /* | | | || |  	http://www.youtube.com/c/DistroTube */
 /* | |_| || |  	http://www.gitlab.com/dwt1/ */
-/* |____/ |_|  	*/ 
+/* |____/ |_|  	*/
 
 #include <X11/XF86keysym.h>
 
@@ -28,12 +28,12 @@ static const char col_1[]  = "#2e344e"; /* background color of bar */
 static const char col_2[]  = "#4c566a"; /* border color unfocused windows */
 static const char col_3[]  = "#d7d7d7";
 static const char col_4[]  = "#5e81ac"; /* border color focused windows and tags */
-/* bar opacity 
+/* bar opacity
  * 0xff is no transparency.
  * 0xee adds wee bit of transparency.
  * Play with the value to get desired transparency.
  */
-static const unsigned int baralpha    = 0xee; 
+static const unsigned int baralpha    = 0xee;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]        = {
 	/*               fg         bg         border   */
@@ -83,7 +83,8 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-#define CMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
+#define CMD(cmd) { .v = (const char*[]){ cmd, NULL } }
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -99,7 +100,6 @@ static const char *dmenucmd[]    = { "dmenu_run", "-fn", "Monoid NF", "-h", "25"
 static const char *termcmd[]     = { "st", NULL };
 /* An alternative way to launch st along with the fish shell */
 /* static const char *termcmd[]     = { "st", "-e fish", NULL }; */
-static const char *tabtermcmd[]  = { "tabbed", "-r", "2", "st", "-w", "''", NULL };
 
 static Key keys[] = {
 	/* modifier             key        function        argument */
@@ -122,7 +122,7 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,   XK_Return, zoom,           {0} },
 	{ MODKEY,               XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,     XK_c,      killclient,     {0} },
-	{ MODKEY|ShiftMask,     XK_t,      spawn,          CMD("~/bin/toggle_picom") },
+	{ MODKEY|ShiftMask,     XK_t,      spawn,          SHCMD("~/bin/toggle_picom") },
 
     /* Layout manipulation */
 	{ MODKEY,               XK_Tab,    cyclelayout,    {.i = -1 } },
@@ -145,31 +145,31 @@ static Key keys[] = {
 	{ MODKEY,               XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,     XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,     XK_period, tagmon,         {.i = +1 } },
-	
+
     /* Apps Launched with SUPER + ALT + KEY */
-	{ MODKEY|Mod1Mask,        XK_e,    spawn,          CMD("st -e emacsclient -c -a emacs") },
-	{ MODKEY|Mod1Mask,        XK_f,    spawn,          CMD("st -e lf") },
-	{ MODKEY|Mod1Mask,        XK_h,    spawn,          CMD("st -e htop") },
-	{ MODKEY|ShiftMask,       XK_m,    spawn,          CMD("st -e alsamixer -c 0") },
-	{ MODKEY|Mod1Mask,        XK_m,    spawn,          CMD("~/bin/i3music") },
-	{ MODKEY,   		  XK_w,    spawn,          CMD("$BROWSER") },
-	{ MODKEY|Mod1Mask,        XK_p,    spawn,          CMD("/opt/enpass/Enpass showassistant") },
-	{ MODKEY,                 XK_s,    spawn,          CMD("~/bin/toggle_screensaver") },
+	{ MODKEY|Mod1Mask,        XK_e,    spawn,           SHCMD("st -e emacsclient -c -a emacs") },
+	{ MODKEY|Mod1Mask,        XK_f,    spawn,           SHCMD("st -e lf") },
+	{ MODKEY|Mod1Mask,        XK_h,    spawn,           SHCMD("st -e htop") },
+	{ MODKEY|ShiftMask,       XK_m,    spawn,           SHCMD("st -e alsamixer -c 0") },
+	{ MODKEY|Mod1Mask,        XK_m,    spawn,           SHCMD("~/bin/i3music") },
+	{ MODKEY,   		          XK_w,    spawn,           CMD("/usr/bin/qutebrowser") },
+	{ MODKEY|Mod1Mask,        XK_p,    spawn,           SHCMD("/opt/enpass/Enpass showassistant") },
+	{ MODKEY,                 XK_s,    spawn,           SHCMD("~/bin/toggle_screensaver") },
 
    /* Different Utilities */
-	{ MODKEY|ShiftMask,       XK_x,    	spawn,          CMD("~/bin/dwmexit") },
-	{ MODKEY|Mod1Mask,        XK_period,	spawn,          CMD("rofi -modes emoji -show emoji") },
+	{ MODKEY|ShiftMask,       XK_x,    	  spawn,        SHCMD("~/bin/dwmexit") },
+	{ MODKEY|Mod1Mask,        XK_period,	spawn,        SHCMD("rofi -modes emoji -show emoji") },
 
    /* Audio Keys */
 
-	{ 0,                      XF86XK_AudioRaiseVolume, spawn, CMD("~/bin/lmc up")},
-	{ 0,                      XF86XK_AudioLowerVolume, spawn, CMD("~/bin/lmc down")},
-	{ 0,                      XF86XK_AudioMute,        spawn, CMD("~/bin/lmc mute")},
-	{ MODKEY,                 XK_F5,                   spawn, CMD("~/bin/lmc toggle")},
-	{ MODKEY,                 XK_F6,                   spawn, CMD("~/bin/lmc stop")},
-	{ MODKEY,                 XK_F7,                   spawn, CMD("~/bin/lmc prev")},
-	{ MODKEY,                 XK_F8,                   spawn, CMD("~/bin/lmc next")},
-	{ MODKEY,                 XK_F12,                  spawn, CMD("~/bin/touchpad_toggle")},
+	{ 0,                      XF86XK_AudioRaiseVolume, spawn, SHCMD("~/bin/lmc up")},
+	{ 0,                      XF86XK_AudioLowerVolume, spawn, SHCMD("~/bin/lmc down")},
+	{ 0,                      XF86XK_AudioMute,        spawn, SHCMD("~/bin/lmc mute")},
+	{ MODKEY,                 XK_F5,                   spawn, SHCMD("~/bin/lmc toggle")},
+	{ MODKEY,                 XK_F6,                   spawn, SHCMD("~/bin/lmc stop")},
+	{ MODKEY,                 XK_F7,                   spawn, SHCMD("~/bin/lmc prev")},
+	{ MODKEY,                 XK_F8,                   spawn, SHCMD("~/bin/lmc next")},
+	{ MODKEY,                 XK_F12,                  spawn, SHCMD("~/bin/touchpad_toggle")},
 
 	TAGKEYS(                  XK_1,          0)
 	TAGKEYS(                  XK_2,          1)
@@ -180,8 +180,8 @@ static Key keys[] = {
 	TAGKEYS(                  XK_7,          6)
 	TAGKEYS(                  XK_8,          7)
 	TAGKEYS(                  XK_9,          8)
-	{ MODKEY|ShiftMask,       XK_q,	   quit,		   {0} },
-        { MODKEY|ShiftMask,       XK_r,    quit,           {1} }, 
+  // { MODKEY|ShiftMask,       XK_q,	   quit,		   {0} },
+  { MODKEY|ShiftMask,       XK_r,											quit,	{1} },
 };
 
 /* button definitions */
