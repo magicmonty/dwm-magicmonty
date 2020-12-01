@@ -1,13 +1,13 @@
-# Maintainer: Derek Taylor (DistroTube) <derek@distrotube.com>
-pkgname=dwm-distrotube-git
-pkgver=6.2
+# Maintainer: Martin Gondermann (magicmonty) <magicmonty@pagansoft.de>
+pkgname=dwm-magicmonty-git
+pkgver=6.2.r14.897a867
 pkgrel=1
-pkgdesc="A heavily-patched and customized build of dwm from DistroTube."
+pkgdesc="A customized build of dwm based on the build by DistroTube."
 arch=(x86_64 i686)
-url="https://gitlab.com/dwt1/dwm-distrotube.git"
+url="https://github.com/magicmonty/dwm-magicmonty.git"
 license=('MIT')
 groups=()
-depends=(libx11 libxinerama ttf-hack ttf-joypixels freetype2 st dmenu libxft-bgra-git dwmblocks-distrotube-git)
+depends=(libx11 libxinerama ttf-hack ttf-joypixels freetype2 st dmenu libxft-bgra-git)
 makedepends=(make)
 checkdepends=()
 optdepends=(surf)
@@ -27,17 +27,17 @@ pkgver() {
 }
 
 build() {
-  cd dwm-distrotube
+  cd dwm-magicmonty
   make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11 FREETYPEINC=/usr/include/freetype2
 }
 
 package() {
-  cd dwm-distrotube  
+  cd dwm-magicmonty
   mkdir -p ${pkgdir}/opt/${pkgname}
   cp -rf * ${pkgdir}/opt/${pkgname}
   make PREFIX=/usr DESTDIR="${pkgdir}" install
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/dwm-distrotube/LICENSE"
-  install -Dm644 README.md "${pkgdir}/usr/share/doc/dwm-distrotube/README.md"
-  install -Dm644 "${srcdir}/dwm-distrotube/dwm.desktop" "$pkgdir/usr/share/xsessions/dwm.desktop"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/dwm-magicmonty/LICENSE"
+  install -Dm644 README.md "${pkgdir}/usr/share/doc/dwm-magicmonty/README.md"
+  install -Dm644 "${srcdir}/dwm-magicmonty/dwm.desktop" "$pkgdir/usr/share/xsessions/dwm.desktop"
 }
 
