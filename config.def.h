@@ -4,6 +4,8 @@
 /* | |_| || |  	http://www.gitlab.com/dwt1/ */
 /* |____/ |_|  	*/ 
 
+#include <X11/XF86keysym.h>
+
 /* See LICENSE file for copyright and license details. */
 /* appearance */
 static const unsigned int borderpx = 2;   /* border pixel of windows */
@@ -18,14 +20,14 @@ static const int vertpadbar        = 7;   /* vertical padding for statusbar */
  * Arch repos and is listed as a dependency for this build. JoyPixels is also
  * a hard dependency and makes colored fonts and emojis possible.
  */
-static const char *fonts[]     = {"Mononoki Nerd Font:size=9:antialias=true:autohint=true",
-                                  "Hack:size=8:antialias=true:autohint=true",
-                                  "JoyPixels:size=10:antialias=true:autohint=true"
+static const char *fonts[]     = {"Mononoki Nerd Font:size=12:antialias=true:autohint=true",
+                                  "Monoid NF:size=16:antialias=true:autohint=true",
+                                  "JoyPixels:size=12:antialias=true:autohint=true"
 						     	};
-static const char col_1[]  = "#282c34"; /* background color of bar */
-static const char col_2[]  = "#282c34"; /* border color unfocused windows */
+static const char col_1[]  = "#2e344e"; /* background color of bar */
+static const char col_2[]  = "#4c566a"; /* border color unfocused windows */
 static const char col_3[]  = "#d7d7d7";
-static const char col_4[]  = "#924441"; /* border color focused windows and tags */
+static const char col_4[]  = "#5e81ac"; /* border color focused windows and tags */
 /* bar opacity 
  * 0xff is no transparency.
  * 0xee adds wee bit of transparency.
@@ -89,7 +91,7 @@ static const Layout layouts[] = {
 /* dmenu */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 /* If you are using the standard dmenu program, use the following. */
-static const char *dmenucmd[]    = { "dmenu_run", "-p", "Run: ", NULL };
+static const char *dmenucmd[]    = { "dmenu_run", "-fn", "Monoid NF", "-h", "25", "-nb", "#2e3440", "-nf", "#d8dee9", "-p", "Run: ", NULL };
 /* If you are using the dmenu-distrotube-git program, use the following for a cooler dmenu! */
 /* static const char *dmenucmd[]    = { "dmenu_run", "-g", "10", "-l", "48", "-p", "Run: ", NULL }; */
 
@@ -103,12 +105,16 @@ static Key keys[] = {
 	/* modifier             key        function        argument */
 	{ MODKEY|ShiftMask,     XK_Return, spawn,          {.v = dmenucmd } },
 	{ MODKEY,               XK_Return, spawn,          {.v = termcmd } },
-	{ Mod1Mask,             XK_Return, spawn,          {.v = tabtermcmd } },
+	// { Mod1Mask,             XK_Return, spawn,          {.v = tabtermcmd } },
 	{ MODKEY,               XK_b,      togglebar,      {0} },
 	{ MODKEY|ShiftMask,     XK_j,      rotatestack,    {.i = +1 } },
 	{ MODKEY|ShiftMask,     XK_k,      rotatestack,    {.i = -1 } },
 	{ MODKEY,               XK_j,      focusstack,     {.i = +1 } },
+	{ MODKEY,               XK_Right,  focusstack,     {.i = +1 } },
+	{ MODKEY,               XK_Down,   focusstack,     {.i = +1 } },
 	{ MODKEY,               XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_Left,   focusstack,     {.i = -1 } },
+	{ MODKEY,               XK_Up,     focusstack,     {.i = -1 } },
 	{ MODKEY,               XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,               XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,               XK_h,      setmfact,       {.f = -0.05} },
@@ -116,6 +122,7 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,   XK_Return, zoom,           {0} },
 	{ MODKEY,               XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,     XK_c,      killclient,     {0} },
+	{ MODKEY|ShiftMask,     XK_t,      spawn,          CMD("~/bin/toggle_picom") },
 
     /* Layout manipulation */
 	{ MODKEY,               XK_Tab,    cyclelayout,    {.i = -1 } },
@@ -125,7 +132,8 @@ static Key keys[] = {
 
     /* Switch to specific layouts */
 	{ MODKEY,               XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,               XK_f,      setlayout,      {.v = &layouts[1]} },
+	// { MODKEY,               XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,               XK_f,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,               XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,               XK_g,      setlayout,      {.v = &layouts[3]} },
 
@@ -139,24 +147,30 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,     XK_period, tagmon,         {.i = +1 } },
 	
     /* Apps Launched with SUPER + ALT + KEY */
-	{ MODKEY|Mod1Mask,        XK_b,    spawn,          CMD("tabbed -r 2 surf -pe x '.surf/html/homepage.html'") },
-	{ MODKEY|Mod1Mask,        XK_c,    spawn,          CMD("st -e cmus") },
 	{ MODKEY|Mod1Mask,        XK_e,    spawn,          CMD("st -e emacsclient -c -a emacs") },
-	{ MODKEY|Mod1Mask,        XK_f,    spawn,          CMD("st -e vifm") },
+	{ MODKEY|Mod1Mask,        XK_f,    spawn,          CMD("st -e lf") },
 	{ MODKEY|Mod1Mask,        XK_h,    spawn,          CMD("st -e htop") },
-	{ MODKEY|Mod1Mask,        XK_i,    spawn,          CMD("st -e irssi") },
-	{ MODKEY|Mod1Mask,        XK_l,    spawn,          CMD("st -e lynx gopher://distro.tube") },
-	{ MODKEY|Mod1Mask,        XK_n,    spawn,          CMD("st -e newsboat") },
-	{ MODKEY|Mod1Mask,        XK_r,    spawn,          CMD("st -e rtv") },
-	
-    /* Dmenu scripts launched with ALT + CTRL + KEY */
-	{ Mod1Mask|ControlMask, XK_e,      spawn,          CMD("./.dmenu/dmenu-edit-configs.sh") },
-	{ Mod1Mask|ControlMask, XK_m,      spawn,          CMD("./.dmenu/dmenu-sysmon.sh") },
-	{ Mod1Mask|ControlMask, XK_p,      spawn,          CMD("passmenu") },
-	{ Mod1Mask|ControlMask, XK_r,      spawn,          CMD("./.dmenu/dmenu-reddio.sh") },
-	{ Mod1Mask|ControlMask, XK_s,      spawn,          CMD("./.dmenu/dmenu-surfraw.sh") },
-	{ Mod1Mask|ControlMask, XK_i,      spawn,          CMD("./.dmenu/dmenu-scrot.sh") },
-    
+	{ MODKEY|ShiftMask,       XK_m,    spawn,          CMD("st -e alsamixer -c 0") },
+	{ MODKEY|Mod1Mask,        XK_m,    spawn,          CMD("~/bin/i3music") },
+	{ MODKEY,   		  XK_w,    spawn,          CMD("$BROWSER") },
+	{ MODKEY|Mod1Mask,        XK_p,    spawn,          CMD("/opt/enpass/Enpass showassistant") },
+	{ MODKEY,                 XK_s,    spawn,          CMD("~/bin/toggle_screensaver") },
+
+   /* Different Utilities */
+	{ MODKEY|ShiftMask,       XK_x,    	spawn,          CMD("~/bin/dwmexit") },
+	{ MODKEY|Mod1Mask,        XK_period,	spawn,          CMD("rofi -modes emoji -show emoji") },
+
+   /* Audio Keys */
+
+	{ 0,                      XF86XK_AudioRaiseVolume, spawn, CMD("~/bin/lmc up")},
+	{ 0,                      XF86XK_AudioLowerVolume, spawn, CMD("~/bin/lmc down")},
+	{ 0,                      XF86XK_AudioMute,        spawn, CMD("~/bin/lmc mute")},
+	{ MODKEY,                 XK_F5,                   spawn, CMD("~/bin/lmc toggle")},
+	{ MODKEY,                 XK_F6,                   spawn, CMD("~/bin/lmc stop")},
+	{ MODKEY,                 XK_F7,                   spawn, CMD("~/bin/lmc prev")},
+	{ MODKEY,                 XK_F8,                   spawn, CMD("~/bin/lmc next")},
+	{ MODKEY,                 XK_F12,                  spawn, CMD("~/bin/touchpad_toggle")},
+
 	TAGKEYS(                  XK_1,          0)
 	TAGKEYS(                  XK_2,          1)
 	TAGKEYS(                  XK_3,          2)
@@ -167,7 +181,7 @@ static Key keys[] = {
 	TAGKEYS(                  XK_8,          7)
 	TAGKEYS(                  XK_9,          8)
 	{ MODKEY|ShiftMask,       XK_q,	   quit,		   {0} },
-    { MODKEY|ShiftMask,       XK_r,    quit,           {1} }, 
+        { MODKEY|ShiftMask,       XK_r,    quit,           {1} }, 
 };
 
 /* button definitions */
@@ -188,3 +202,73 @@ static Button buttons[] = {
 };
 
 
+void
+setlayoutex(const Arg *arg)
+{
+	setlayout(&((Arg) { .v = &layouts[arg->i] }));
+}
+
+void
+viewex(const Arg *arg)
+{
+	view(&((Arg) { .ui = 1 << arg->ui }));
+}
+
+void
+viewall(const Arg *arg)
+{
+	view(&((Arg){.ui = ~0}));
+}
+
+void
+toggleviewex(const Arg *arg)
+{
+	toggleview(&((Arg) { .ui = 1 << arg->ui }));
+}
+
+void
+tagex(const Arg *arg)
+{
+	tag(&((Arg) { .ui = 1 << arg->ui }));
+}
+
+void
+toggletagex(const Arg *arg)
+{
+	toggletag(&((Arg) { .ui = 1 << arg->ui }));
+}
+
+void
+tagall(const Arg *arg)
+{
+	tag(&((Arg){.ui = ~0}));
+}
+
+/* signal definitions */
+/* signum must be greater than 0 */
+/* trigger signals using `xsetroot -name "fsignal:<signame> [<type> <value>]"` */
+static Signal signals[] = {
+	/* signum           function */
+	{ "focusstack",     focusstack },
+	{ "setmfact",       setmfact },
+	{ "togglebar",      togglebar },
+	{ "incnmaster",     incnmaster },
+	{ "togglefloating", togglefloating },
+	{ "focusmon",       focusmon },
+	{ "tagmon",         tagmon },
+	{ "zoom",           zoom },
+	{ "view",           view },
+	{ "viewall",        viewall },
+	{ "viewex",         viewex },
+	{ "toggleview",     view },
+	{ "toggleviewex",   toggleviewex },
+	{ "tag",            tag },
+	{ "tagall",         tagall },
+	{ "tagex",          tagex },
+	{ "toggletag",      tag },
+	{ "toggletagex",    toggletagex },
+	{ "killclient",     killclient },
+	{ "quit",           quit },
+	{ "setlayout",      setlayout },
+	{ "setlayoutex",    setlayoutex },
+};
